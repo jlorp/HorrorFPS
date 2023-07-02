@@ -364,6 +364,7 @@
 "Assets/Scripts/PlayerController/PlayerBaseState.cs"
 "Assets/Scripts/PlayerController/PlayerGroundState.cs"
 "Assets/Scripts/PlayerController/PlayerInput.cs"
+"Assets/Scripts/PlayerController/PlayerMantleState.cs"
 "Assets/Scripts/PlayerController/PlayerMotor.cs"
 -langversion:9.0
 

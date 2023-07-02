@@ -13,7 +13,7 @@ public class PlayerGroundState : PlayerBaseState
 
     public override void EnterState()
     {   
-        Debug.Log("groundsyta");
+       
     }
     public override void ExitState()
     {

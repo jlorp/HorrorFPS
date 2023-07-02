@@ -33,8 +33,9 @@ public class PlayerAirState : PlayerBaseState
     public override void FixedUpdateState()
     {
         UpdateInternalState();
-
-        _player.AdjustVelocity(_player.move.normalized, _player.walkSpeed, _player.maxAirAcceleration,true);
+        LedgeDetection(_player.forwardAxis);
+        
+        AdjustVelocityAir(_player.move, _player.walkSpeed, _player.maxAirAcceleration);
 
         if (_player.jump)
         {
@@ -47,8 +48,9 @@ public class PlayerAirState : PlayerBaseState
         }
 
 
-        
-        _player.velocity += (_player.gravity) * Time.deltaTime;
+        float gravityMultiplier = _player.velocity.y < .5 ? 1.5f : 1;
+
+        _player.velocity += (_player.gravity) * gravityMultiplier * Time.deltaTime;
 
         _player.body.velocity = _player.velocity;
     }
@@ -68,6 +70,43 @@ public class PlayerAirState : PlayerBaseState
         else
         {
             _player.contactNormal = _player.upAxis;
+        }
+    }
+
+     void AdjustVelocityAir(Vector2 move, float speed, float acceleration)
+    {
+        float currentX = Vector3.Dot(_player.velocity, _player.rightAxis);
+        float currentZ = Vector3.Dot(_player.velocity, _player.forwardAxis);
+        float maxSpeedChange = acceleration * Time.deltaTime;
+        _player.relativeVelocity = _player.velocity - _player.connectionVelocity;
+        Vector3 m_unitgoal = (_player.rightAxis*move.x)+ (_player.forwardAxis*move.y);
+        
+        
+        float newX = Mathf.MoveTowards(currentX, move.x * speed, maxSpeedChange);
+        float newZ = Mathf.MoveTowards(currentZ, move.y * speed, maxSpeedChange);
+        _player.velocity += _player.rightAxis* (newX - currentX) + _player.forwardAxis * (newZ - currentZ);
+    }
+
+    void LedgeDetection(Vector3 aimDirection)
+    {
+        if (Physics.Raycast(_player.body.position+(Vector3.up*-.7f), aimDirection, out RaycastHit hit, 4) && Mathf.Abs(hit.normal.y)<.15f)
+        {
+            //_player.testGuy.transform.position=hit.point;
+            Vector3 wallUp= _player.ProjectDirectionOnPlane(Vector3.up, hit.normal);
+           
+            //_player.testGuy.transform.rotation= Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+             if (Physics.Raycast(hit.point+(wallUp*2)+(hit.normal*-.05f), -wallUp, out RaycastHit hit2, 1.95f))
+             {
+                _player.testGuy.transform.position=hit2.point;
+                _player.testGuy.transform.rotation= Quaternion.FromToRotation(Vector3.up, hit.normal);
+                if (Vector3.Distance(_player.body.position,hit2.point)< _player.maxMantleDistance)
+                {
+                    _player.mantleGoal=hit2.point;
+                    _player.mantleUpDirection =wallUp;
+                    _player.SwitchState(_player._mantleState);
+                }
+             }
         }
     }
 }

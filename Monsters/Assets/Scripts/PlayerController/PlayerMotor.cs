@@ -11,6 +11,7 @@ public class PlayerMotor : MonoBehaviour
     [HideInInspector] public Vector3 moveRelative;
     [HideInInspector] public bool jump;
     public Transform playerInputSpace = default;
+    public GameObject testGuy;
 
     [Header("Jump")]
     [Range(0, 15)] public int coyoteTimeSteps = 2;
@@ -29,6 +30,11 @@ public class PlayerMotor : MonoBehaviour
     [Range(0f, 90f)] public float maxGroundAngle = 25f;
     [Range(0f, 100f)] public float maxSnapSpeed = 100f;
 
+    [Header("Mantling")]
+    [HideInInspector] public Vector3 mantleGoal;
+    [HideInInspector] public Vector3 mantleUpDirection;
+    [Range(0f, 2f)] public float maxMantleDistance = 1f;
+
     // Axises
     [HideInInspector] public Vector3 forwardAxis;
     [HideInInspector] public Vector3 rightAxis;
@@ -39,6 +45,7 @@ public class PlayerMotor : MonoBehaviour
     //PlayerStates
     private PlayerBaseState _currentState;
     public PlayerGroundState _groundState;
+    public PlayerMantleState _mantleState;
     public PlayerAirState _airState;
 
     // Velocities
@@ -80,6 +87,7 @@ public class PlayerMotor : MonoBehaviour
     {
         _groundState = new PlayerGroundState(this);
         _airState = new PlayerAirState(this);
+        _mantleState = new PlayerMantleState(this);
     }
 
     public void AdjustVelocity(Vector2 move, float speed, float acceleration, bool useCurve)
