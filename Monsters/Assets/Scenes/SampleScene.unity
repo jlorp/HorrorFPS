@@ -871,7 +871,7 @@ MonoBehaviour:
   playerInputSpace: {fileID: 963194228}
   canJump: 1
   coyoteTimeSteps: 2
-  maxAirAcceleration: 10
+  maxAirAcceleration: 2
   jumpHeight: 2
   jumpBufferTime: 0.2
   GroundAccellerationCurve:
@@ -909,11 +909,11 @@ MonoBehaviour:
     m_RotationOrder: 4
   probeMask:
     serializedVersion: 2
-    m_Bits: 115
+    m_Bits: 2147483647
   probeDistance: 1
   walkSpeed: 3
   runSpeed: 7
-  maxAcceleration: 16
+  maxAcceleration: 20
   maxGroundAngle: 10
   maxSnapSpeed: 50
   forwardAxis: {x: 0, y: 0, z: 0}
@@ -933,7 +933,7 @@ MonoBehaviour:
   playerCollider: {fileID: 0}
   stepsSinceLastGrounded: 0
   stepsSinceLastJump: 0
-  minGroundDotProduct: 0
+  minGroundDotProduct: 0.9848077
   contactNormal: {x: 0, y: 0, z: 0}
   steepNormal: {x: 0, y: 0, z: 0}
   groundContactCount: 0

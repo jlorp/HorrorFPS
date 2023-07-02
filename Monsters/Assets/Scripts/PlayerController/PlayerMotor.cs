@@ -34,7 +34,6 @@ public class PlayerMotor : MonoBehaviour
     [HideInInspector] public Vector3 forwardAxis;
     [HideInInspector] public Vector3 rightAxis;
     [HideInInspector] public Vector3 upAxis;
-
      // Tracking
     [HideInInspector] public int jumped = 0;
 
@@ -114,10 +113,16 @@ public class PlayerMotor : MonoBehaviour
         body = GetComponent<Rigidbody>();
         body.useGravity = false;
         playerCollider = GetComponent<CapsuleCollider>();
+        upAxis=Vector3.up;
 
         InitializeStates();
-        _currentState = _airState;
+        _currentState = _groundState;
         _currentState.EnterState();
+    }
+
+    private void OnValidate()
+    {
+        minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
     }
 
     private void GetControls()
@@ -247,7 +252,7 @@ public class PlayerMotor : MonoBehaviour
         }
 
         if (!Physics.Raycast(body.position, -upAxis, out RaycastHit hit, probeDistance, probeMask))
-        {
+        {   
             return false;
         }
 

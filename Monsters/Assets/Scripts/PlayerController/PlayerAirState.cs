@@ -9,6 +9,7 @@ public class PlayerAirState : PlayerBaseState
 
     public override void EnterState()
     {   
+  
     }
     public override void ExitState()
     {
