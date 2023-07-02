@@ -13,7 +13,7 @@ public class PlayerGroundState : PlayerBaseState
 
     public override void EnterState()
     {   
-    
+        Debug.Log("groundsyta");
     }
     public override void ExitState()
     {
@@ -27,7 +27,13 @@ public class PlayerGroundState : PlayerBaseState
        
         _player.AdjustVelocity(_player.move, _player.walkSpeed, _player.maxAcceleration,true);
 
-        //_player.velocity += _player.contactNormal * (Vector3.Dot(_player.gravity, _player.contactNormal) * Time.deltaTime);
+       if (_player.jump)
+        {
+                _player.ResetJump();
+                _player.Jump(_player.gravity);
+        }
+
+        _player.velocity += _player.contactNormal * (Vector3.Dot(_player.gravity, _player.contactNormal) * Time.deltaTime);
         _player.body.velocity = _player.velocity;
     }
 
@@ -65,6 +71,8 @@ public class PlayerGroundState : PlayerBaseState
             }
         }
     }
+
+    
 
     void UpdateConnectionState()
     {

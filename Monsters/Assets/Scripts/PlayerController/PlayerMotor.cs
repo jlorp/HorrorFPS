@@ -13,7 +13,6 @@ public class PlayerMotor : MonoBehaviour
     public Transform playerInputSpace = default;
 
     [Header("Jump")]
-    public bool canJump = true;
     [Range(0, 15)] public int coyoteTimeSteps = 2;
     [Range(0f, 100f)] public float maxAirAcceleration = 1f;
     [Range(0f, 10f)] public float jumpHeight = 2f;
@@ -129,10 +128,9 @@ public class PlayerMotor : MonoBehaviour
     {
         move = new Vector2(input.horizontal, input.vertical);
         move = Vector2.ClampMagnitude(move, 1f);
-        if (canJump)
-        {
-            jump |= (input.jumpDown || _currentJumpBufferTime > 0);
-        }
+        
+        jump |= (input.jumpDown || _currentJumpBufferTime > 0);
+        
 
         if (input.jumpDown)
         {
@@ -289,5 +287,38 @@ public class PlayerMotor : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void ResetJump()
+    {
+        jump = false;
+        _currentJumpBufferTime = -1;
+    }
+
+    public void Jump(Vector3 gravity)
+    {
+        jumped = 0;
+        stepsSinceLastJump = 0;
+        float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
+
+       
+        Vector3 xAxis = ProjectDirectionOnPlane(rightAxis, contactNormal);
+        Vector3 zAxis = ProjectDirectionOnPlane(forwardAxis, contactNormal);
+        relativeVelocity = velocity - connectionVelocity;
+
+        jumped += 1;
+        
+        float jumptweak=0f;
+        if(velocity.y>0)
+        {
+            jumptweak=velocity.y*.6f;
+        }
+        else
+        {
+            jumptweak=velocity.y;
+        }
+    
+        velocity += Vector3.up* (jumpSpeed-jumptweak);
+        SwitchState(_airState);
     }
 }

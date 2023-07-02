@@ -6,16 +6,23 @@ public class PlayerAirState : PlayerBaseState
 {
     private PlayerMotor _player;
     private int _stepsSinceStartedFalling;
+    bool releasedJump;
 
     public override void EnterState()
     {   
-  
+        releasedJump=false;
     }
     public override void ExitState()
     {
     }
     public override void UpdateState()
     {
+        if (releasedJump==false && _player.input.jumpUp && _player.velocity.y>0f)
+        {
+            _player.velocity += -Vector3.up*_player.velocity.y *.4f;
+            _player.body.velocity = _player.velocity;
+            releasedJump=true;
+        }
     }
      public PlayerAirState(PlayerMotor player)
     {
