@@ -10,8 +10,8 @@ public class PlayerMotor : MonoBehaviour
     [HideInInspector] public Vector2 move;
     [HideInInspector] public Vector3 moveRelative;
     [HideInInspector] public bool jump;
+    [HideInInspector] public bool sprint;
     public Transform playerInputSpace = default;
-    public GameObject testGuy;
 
     [Header("Jump")]
     [Range(0, 15)] public int coyoteTimeSteps = 2;
@@ -25,10 +25,11 @@ public class PlayerMotor : MonoBehaviour
     public LayerMask probeMask = -1;
     [Min(0f)] public float probeDistance = 1f;
     [Range(0f, 10f)] public float walkSpeed = 4f;
-    [Range(0f, 10f)] public float runSpeed = 7f;
+    [Range(0f, 20f)] public float runSpeed = 7f;
     [Range(0f, 100f)] public float maxAcceleration = 10f;
     [Range(0f, 90f)] public float maxGroundAngle = 25f;
     [Range(0f, 100f)] public float maxSnapSpeed = 100f;
+    [HideInInspector] public bool currentlySprinting=false;
 
     [Header("Mantling")]
     [HideInInspector] public Vector3 mantleGoal;
@@ -120,6 +121,7 @@ public class PlayerMotor : MonoBehaviour
         body = GetComponent<Rigidbody>();
         body.useGravity = false;
         playerCollider = GetComponent<CapsuleCollider>();
+        sprint = false;
         upAxis=Vector3.up;
 
         InitializeStates();
@@ -138,7 +140,7 @@ public class PlayerMotor : MonoBehaviour
         move = Vector2.ClampMagnitude(move, 1f);
         
         jump |= (input.jumpDown || _currentJumpBufferTime > 0);
-        
+        sprint = input.sprint;
 
         if (input.jumpDown)
         {

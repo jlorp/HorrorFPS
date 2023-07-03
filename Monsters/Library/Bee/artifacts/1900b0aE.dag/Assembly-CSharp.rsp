@@ -359,13 +359,13 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.VSCode.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
-"Assets/Scripts/PlayerController/CameraControl.cs"
-"Assets/Scripts/PlayerController/PlayerAirState.cs"
+"Assets/Scripts/PlayerController/Camera/CameraControl.cs"
 "Assets/Scripts/PlayerController/PlayerBaseState.cs"
-"Assets/Scripts/PlayerController/PlayerGroundState.cs"
 "Assets/Scripts/PlayerController/PlayerInput.cs"
-"Assets/Scripts/PlayerController/PlayerMantleState.cs"
 "Assets/Scripts/PlayerController/PlayerMotor.cs"
+"Assets/Scripts/PlayerController/States/PlayerAirState.cs"
+"Assets/Scripts/PlayerController/States/PlayerGroundState.cs"
+"Assets/Scripts/PlayerController/States/PlayerMantleState.cs"
 -langversion:9.0
 
 /deterministic
