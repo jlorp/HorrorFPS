@@ -8,6 +8,8 @@ public class CameraControl : MonoBehaviour
     Vector2 orbitAngles = new Vector2(45f, 0f);
     [SerializeField, Range(1f, 360f)]float rotationSpeed = 90f;
     float lastManualRotationTime;
+	public GameObject cameraParent;
+	public Vector3 cameraPositionGoal;
 
     void Awake()
     {
@@ -17,6 +19,7 @@ public class CameraControl : MonoBehaviour
     void LateUpdate()
     {
         Quaternion lookRotation;
+		LerpPosition();
         if (ManualRotation()) {
 			ConstrainAngles();
 			lookRotation = Quaternion.Euler(orbitAngles);
@@ -27,6 +30,11 @@ public class CameraControl : MonoBehaviour
         transform.rotation= lookRotation;
 
     }
+	
+	void LerpPosition()
+	{
+		cameraParent.transform.localPosition = Vector3.Lerp(cameraParent.transform.localPosition, cameraPositionGoal, 10* Time.unscaledDeltaTime);
+	}	
 
     bool ManualRotation () {
 		Vector2 input = new Vector2(

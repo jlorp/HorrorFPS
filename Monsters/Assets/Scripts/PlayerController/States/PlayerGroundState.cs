@@ -17,17 +17,58 @@ public class PlayerGroundState : PlayerBaseState
     }
     public override void ExitState()
     {
+        
     }
     public override void UpdateState()
     {
+        //crouching 
+        if(_player.crouch)
+        {
+           if(_player.currentlyCrouching == false)
+            {
+                _player.currentlyCrouching=true;
+            }
+            else if (_player.currentlyCrouching==true)
+            {
+                checkUncrouch();
+            }
+        }
+
+        if (_player.currentlyCrouching)
+        {
+            _player.cameraScript.cameraPositionGoal= new Vector3(0,_player.crouchHeight,0);
+            _player.currentlySprinting=false;
+            _player.playerColliderStanding.isTrigger=true;
+        }
+
+    }
+    bool checkUncrouch()
+    {
+      CollisionSensor cs=  _player.playerColliderStanding.GetComponent<CollisionSensor>();
+      if (cs._overlaps>0)
+      {
+            return false;
+      }
+      else
+      {
+            _player.playerColliderStanding.isTrigger=false;
+            _player.currentlyCrouching = false;
+            _player.cameraScript.cameraPositionGoal= new Vector3(0,_player.walkHeight,0);
+            return true;
+      }
     }
     public override void FixedUpdateState()
     {
         UpdateInternalState();
 
         float speedgoal = _player.currentlySprinting == false ? _player.walkSpeed: _player.runSpeed;
+        if (_player.currentlyCrouching)
+        {
+            speedgoal=_player.walkSpeed*.5f;
+        }
         _player.AdjustVelocity(_player.move, speedgoal, _player.maxAcceleration,true);
 
+        //sprinting
         if (_player.velocity.magnitude>.1 && _player.sprint)
         {
             _player.currentlySprinting=true;
@@ -38,9 +79,18 @@ public class PlayerGroundState : PlayerBaseState
         }
 
        if (_player.jump)
-        {
+        {   
+            if(_player.currentlyCrouching)
+            {
+                _player.ResetJump();
+                checkUncrouch();
+            }
+            else
+            {
                 _player.ResetJump();
                 _player.Jump(_player.gravity);
+            }
+    
         }
 
         _player.velocity += _player.contactNormal * (Vector3.Dot(_player.gravity, _player.contactNormal) * Time.deltaTime);

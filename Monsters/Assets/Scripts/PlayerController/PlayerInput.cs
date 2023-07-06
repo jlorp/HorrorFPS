@@ -17,6 +17,10 @@ public class PlayerInput : MonoBehaviour
     public bool sprintUp    { get; private set; }
     public bool sprintDown  { get; private set; }
 
+    public bool crouch { get; private set; }
+    public bool crouchUp { get; private set; }
+    public bool crouchDown { get; private set; }
+
     private void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
@@ -31,5 +35,10 @@ public class PlayerInput : MonoBehaviour
         sprint = Input.GetButton("Sprint");
         sprintDown = Input.GetButtonDown("Sprint");
         sprintUp = Input.GetButtonUp("Sprint");
+
+        crouch = Input.GetButton("Crouch");
+        crouchDown = Input.GetButtonDown("Crouch");
+        crouchUp = Input.GetButtonUp("Crouch");
+
     }
 }

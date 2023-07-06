@@ -11,7 +11,9 @@ public class PlayerMotor : MonoBehaviour
     [HideInInspector] public Vector3 moveRelative;
     [HideInInspector] public bool jump;
     [HideInInspector] public bool sprint;
+    [HideInInspector] public bool crouch;
     public Transform playerInputSpace = default;
+    public CameraControl cameraScript;
 
     [Header("Jump")]
     [Range(0, 15)] public int coyoteTimeSteps = 2;
@@ -26,14 +28,19 @@ public class PlayerMotor : MonoBehaviour
     [Min(0f)] public float probeDistance = 1f;
     [Range(0f, 10f)] public float walkSpeed = 4f;
     [Range(0f, 20f)] public float runSpeed = 7f;
+    [HideInInspector] public float walkHeight = .3f;
+    [HideInInspector] public float crouchHeight= -0.25f;
     [Range(0f, 100f)] public float maxAcceleration = 10f;
     [Range(0f, 90f)] public float maxGroundAngle = 25f;
     [Range(0f, 100f)] public float maxSnapSpeed = 100f;
+    
     [HideInInspector] public bool currentlySprinting=false;
+    [HideInInspector] public bool currentlyCrouching=false;
 
     [Header("Mantling")]
     [HideInInspector] public Vector3 mantleGoal;
     [HideInInspector] public Vector3 mantleUpDirection;
+    [HideInInspector] public Vector3 mantleNormalDirection;
     [Range(0f, 2f)] public float maxMantleDistance = 1f;
 
     // Axises
@@ -63,6 +70,7 @@ public class PlayerMotor : MonoBehaviour
     [HideInInspector] public Vector3 connectionWorldPosition;
     [HideInInspector] public Vector3 connectionLocalPosition;
     [HideInInspector] public CapsuleCollider playerCollider;
+    [HideInInspector] public CapsuleCollider playerColliderStanding;
 
     // Functions 
     public bool OnGround => groundContactCount > 0;
@@ -91,6 +99,22 @@ public class PlayerMotor : MonoBehaviour
         _mantleState = new PlayerMantleState(this);
     }
 
+    private void Start()
+    {
+        input = GetComponent<PlayerInput>();
+        body = GetComponent<Rigidbody>();
+        body.useGravity = false;
+        playerCollider = GetComponent<CapsuleCollider>();
+        sprint = false;
+        upAxis=Vector3.up;
+
+        cameraScript.cameraPositionGoal= new Vector3(0,walkHeight,0);
+
+        InitializeStates();
+        _currentState = _groundState;
+        _currentState.EnterState();
+    }
+
     public void AdjustVelocity(Vector2 move, float speed, float acceleration, bool useCurve)
     {
         Vector3 xAxis = ProjectDirectionOnPlane(rightAxis, contactNormal);
@@ -115,20 +139,6 @@ public class PlayerMotor : MonoBehaviour
         velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
     }
 
-    private void Start()
-    {
-        input = GetComponent<PlayerInput>();
-        body = GetComponent<Rigidbody>();
-        body.useGravity = false;
-        playerCollider = GetComponent<CapsuleCollider>();
-        sprint = false;
-        upAxis=Vector3.up;
-
-        InitializeStates();
-        _currentState = _groundState;
-        _currentState.EnterState();
-    }
-
     private void OnValidate()
     {
         minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
@@ -141,6 +151,7 @@ public class PlayerMotor : MonoBehaviour
         
         jump |= (input.jumpDown || _currentJumpBufferTime > 0);
         sprint = input.sprint;
+        crouch = input.crouchDown;
 
         if (input.jumpDown)
         {

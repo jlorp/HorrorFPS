@@ -38,11 +38,6 @@ public class PlayerAirState : PlayerBaseState
         
         AdjustVelocityAir(_player.move, speedMax, _player.maxAirAcceleration);
 
-        if (_player.jump)
-        {
-            //Jump(_player.gravity);
-        }
-
         if (_player.SnapToGround())
         {
             _player.SwitchState(_player._groundState);
@@ -90,7 +85,7 @@ public class PlayerAirState : PlayerBaseState
 
     void LedgeDetection(Vector3 aimDirection)
     {
-        if (Physics.Raycast(_player.body.position+(Vector3.up*-.7f), aimDirection, out RaycastHit hit, 4) && Mathf.Abs(hit.normal.y)<.25f)
+        if (Physics.Raycast(_player.body.position+(Vector3.up*-.25f), aimDirection, out RaycastHit hit, 4) && Mathf.Abs(hit.normal.y)<.25f)
         {
             Vector3 wallUp= _player.ProjectDirectionOnPlane(Vector3.up, hit.normal);
 
@@ -98,9 +93,13 @@ public class PlayerAirState : PlayerBaseState
              {
                 if (Vector3.Distance(_player.body.position,hit2.point)< _player.maxMantleDistance)
                 {
-                    _player.mantleGoal=hit2.point;
-                    _player.mantleUpDirection =wallUp;
-                    _player.SwitchState(_player._mantleState);
+                    if (_player.body.position.y-.5f - hit2.point.y<-.5f && _player.body.velocity.y<1)
+                    {
+                        _player.mantleGoal=hit2.point;
+                        _player.mantleUpDirection =wallUp;
+                        _player.mantleNormalDirection= hit.normal;
+                        _player.SwitchState(_player._mantleState);
+                    }
                 }
              }
         }
