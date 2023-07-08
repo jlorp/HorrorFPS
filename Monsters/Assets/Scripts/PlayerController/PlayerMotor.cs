@@ -14,6 +14,7 @@ public class PlayerMotor : MonoBehaviour
     [HideInInspector] public bool crouch;
     public Transform playerInputSpace = default;
     public CameraControl cameraScript;
+    [HideInInspector] public InteractionManager interactionBrain;
 
     [Header("Jump")]
     [Range(0, 15)] public int coyoteTimeSteps = 2;
@@ -103,6 +104,7 @@ public class PlayerMotor : MonoBehaviour
     {
         input = GetComponent<PlayerInput>();
         body = GetComponent<Rigidbody>();
+        interactionBrain= GetComponent<InteractionManager>();
         body.useGravity = false;
         playerCollider = GetComponent<CapsuleCollider>();
         sprint = false;

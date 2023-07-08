@@ -21,6 +21,11 @@ public class PlayerInput : MonoBehaviour
     public bool crouchUp { get; private set; }
     public bool crouchDown { get; private set; }
 
+    public bool interact  { get; private set; }
+    public bool interactUp { get; private set; }
+    public bool interactDown { get; private set; }
+
+
     private void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
@@ -39,6 +44,10 @@ public class PlayerInput : MonoBehaviour
         crouch = Input.GetButton("Crouch");
         crouchDown = Input.GetButtonDown("Crouch");
         crouchUp = Input.GetButtonUp("Crouch");
+
+        interact = Input.GetButton("Interact");
+        interactUp = Input.GetButtonUp("Interact");
+        interactDown = Input.GetButtonDown("Interact");
 
     }
 }

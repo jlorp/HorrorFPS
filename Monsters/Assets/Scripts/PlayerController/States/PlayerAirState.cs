@@ -95,7 +95,6 @@ public class PlayerAirState : PlayerBaseState
                 {
                     if (_player.body.position.y-.5f - hit2.point.y<-.4f && _player.body.velocity.y<1 && _player.body.velocity.y>-7f)
                     {
-                        Debug.Log("Mantlin!");
                         _player.mantleGoal=hit2.point;
                         _player.mantleUpDirection =wallUp;
                         _player.mantleNormalDirection= hit.normal;
