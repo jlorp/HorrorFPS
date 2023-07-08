@@ -93,8 +93,9 @@ public class PlayerAirState : PlayerBaseState
              {
                 if (Vector3.Distance(_player.body.position,hit2.point)< _player.maxMantleDistance)
                 {
-                    if (_player.body.position.y-.5f - hit2.point.y<-.5f && _player.body.velocity.y<1)
+                    if (_player.body.position.y-.5f - hit2.point.y<-.4f && _player.body.velocity.y<1 && _player.body.velocity.y>-7f)
                     {
+                        Debug.Log("Mantlin!");
                         _player.mantleGoal=hit2.point;
                         _player.mantleUpDirection =wallUp;
                         _player.mantleNormalDirection= hit.normal;

@@ -54,7 +54,7 @@ public class PlayerMantleState : PlayerBaseState
         {
             _player.SwitchState(_player._groundState);
         }
-        else if (timeMantlin>3f)
+        else if (timeMantlin>2f)
         {
             _player.SwitchState(_player._groundState);
         }
@@ -63,14 +63,12 @@ public class PlayerMantleState : PlayerBaseState
     void AdjustVelocityMantle(Vector3 goal, float speed, float acceleration)
     {
         float yGoal=0;
+        float xGoal=1;
         
-        Vector3 flatgoal= goal- _player.body.position;
-        flatgoal.y=0;
-        flatgoal= flatgoal.normalized;
-
-        if(goal.y+goalYOffset>_player.body.position.y)
+        if(goal.y+goalYOffset+.1f>_player.body.position.y)
         {
             yGoal=1;
+            xGoal=0;
         }
         float maxSpeedChange = acceleration * Time.deltaTime;
 
@@ -83,9 +81,8 @@ public class PlayerMantleState : PlayerBaseState
         
   
         float newY= Mathf.MoveTowards(currentY, speed, maxSpeedChange *yDoubleDown);
-
        
-        _player.velocity+= -_player.mantleUpDirection* yGoal * (currentY-newY) + (-_player.mantleNormalDirection * maxSpeedChange *.3f);
+        _player.velocity+= -_player.mantleUpDirection* yGoal * (currentY-newY) + (-_player.mantleNormalDirection * maxSpeedChange *.3f *xGoal);
     }
 
 }

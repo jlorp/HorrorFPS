@@ -64,7 +64,7 @@ public class PlayerGroundState : PlayerBaseState
         float speedgoal = _player.currentlySprinting == false ? _player.walkSpeed: _player.runSpeed;
         if (_player.currentlyCrouching)
         {
-            speedgoal=_player.walkSpeed*.5f;
+            speedgoal=_player.walkSpeed*.75f;
         }
         _player.AdjustVelocity(_player.move, speedgoal, _player.maxAcceleration,true);
 

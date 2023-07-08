@@ -361,6 +361,8 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/CollisionSensor.cs"
 "Assets/Scripts/PlayerController/Camera/CameraControl.cs"
+"Assets/Scripts/PlayerController/Interactions/Pickupable.cs"
+"Assets/Scripts/PlayerController/Interactions/PlayerPickupBrain.cs"
 "Assets/Scripts/PlayerController/PlayerBaseState.cs"
 "Assets/Scripts/PlayerController/PlayerInput.cs"
 "Assets/Scripts/PlayerController/PlayerMotor.cs"
