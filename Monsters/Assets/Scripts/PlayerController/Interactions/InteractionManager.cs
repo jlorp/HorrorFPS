@@ -6,8 +6,10 @@ public class InteractionManager : MonoBehaviour
 {
     public GameObject reticleObject;
     public GameObject heldPosition;
+    
     [HideInInspector] public PlayerInput input;
     [HideInInspector] public bool interact;
+    [HideInInspector] public bool toss;
     bool hitPickup;
     bool hitInteract;
 
@@ -24,16 +26,20 @@ public class InteractionManager : MonoBehaviour
     {
         GetControls();
 
-        if (interact && hitPickup && hit.distance < 2f)
-        {
-            PickUp(hit.collider.gameObject);
-        }
-        else if (heldObject!=null)
+        if (heldObject!=null)
         {
             if (interact)
             {
                 Drop();
             }
+            else if (toss)
+            {
+                Throw();
+            }
+        }
+        else if (interact && hitPickup && hit.distance < 2f)
+        {
+            PickUp(hit.collider.gameObject);
         }
 
     }
@@ -72,7 +78,9 @@ public class InteractionManager : MonoBehaviour
     private void GetControls()
     {
         interact= input.interactDown;
+        toss = input.tossDown;
     }
+
     void PickUp(GameObject target)
     {
         heldObject= target;
@@ -98,6 +106,20 @@ public class InteractionManager : MonoBehaviour
             rb.detectCollisions=true;
         }
         heldObject.transform.SetParent(null);
+        heldObject=null;
+    }
+
+    void Throw()
+    {
+        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+        if(rb!=null)
+        {
+            rb.isKinematic=false;
+            rb.detectCollisions=true;
+        }
+        heldObject.transform.SetParent(null);
+
+        rb.AddForce(heldPosition.transform.forward * 150f);
         heldObject=null;
     }
 }

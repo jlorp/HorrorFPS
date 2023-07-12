@@ -25,6 +25,9 @@ public class PlayerInput : MonoBehaviour
     public bool interactUp { get; private set; }
     public bool interactDown { get; private set; }
 
+    public bool toss { get; private set; }
+    public bool tossDown { get; private set; }
+
 
     private void Update()
     {
@@ -48,6 +51,8 @@ public class PlayerInput : MonoBehaviour
         interact = Input.GetButton("Interact");
         interactUp = Input.GetButtonUp("Interact");
         interactDown = Input.GetButtonDown("Interact");
-
+        
+        toss = Input.GetButton("Toss");
+        tossDown = Input.GetButtonDown("Toss");
     }
 }
